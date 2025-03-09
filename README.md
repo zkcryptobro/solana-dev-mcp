@@ -19,15 +19,15 @@ The Model Context Protocol (MCP) is a standardized interface for AI models to in
 Clone this repository and install dependencies:
 
 ```bash
-$ git clone https://github.com/solana-foundation/solana-dev-mcp.git
-$ cd solana-dev-mcp
-$ pnpm install
+git clone https://github.com/solana-foundation/solana-dev-mcp.git
+cd solana-dev-mcp
+pnpm install
 ```
 
 To run this server in the MCP inspector, use:
 
 ```bash
-$ npx @modelcontextprotocol/inspector ts-node index.ts
+npx @modelcontextprotocol/inspector ts-node index.ts
 ```
 
 ## Getting Started
