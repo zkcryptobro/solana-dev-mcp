@@ -19,46 +19,35 @@ The Model Context Protocol (MCP) is a standardized interface for AI models to in
 Clone this repository and install dependencies:
 
 ```bash
-git clone https://github.com/yourusername/solana-dev-mcp.git
-cd solana-dev-mcp
-pnpm install
+$ git clone https://github.com/solana-foundation/solana-dev-mcp.git
+$ cd solana-dev-mcp
+$ pnpm install
 ```
 
-## Testing Your Installation
-
-To verify that everything is working correctly, run the following command:
+To run this server in the MCP inspector, use:
 
 ```bash
-pnpm run check-install
+$ npx @modelcontextprotocol/inspector ts-node index.ts
 ```
-
-This command will:
-
-1. Compile the TypeScript code to JavaScript
-2. Start the MCP server
-3. Send test messages to the server
-4. Verify that the server responds correctly
-
-If all tests pass, you'll see a success message confirming that your installation is working correctly.
 
 ## Getting Started
 
-1. **Explore the code**: The main implementation is in `index.ts`, which sets up an MCP server with simple fetching tools and a docs resources.
+1. **Explore the code**: The main implementation is in `index.ts`, which sets up an MCP server with simple fetching tools and some prompts.
 
-2. **Modify the server**: You can extend the server by adding more tools and resources based on your needs.
+2. **Modify the server**: You can extend the server by adding more tools, resources, and prompts.
 
-3. **Integrate with Solana**: This basic implementation can be extended to interact with Solana blockchain by adding tools for wallet operations, transaction signing, etc.
+3. **Get ideas for extensions**: Check out the [Ideas Extending MCP for Solana Development](#ideas-extending-mcp-for-solana-development) section to get inspiration for new tools and resources to add.
 
 ## Example Usage
 
-Add this to your Claude desktop config by doing so:
+Add this to your [Claude desktop config](https://modelcontextprotocol.io/quickstart/user)
 
 ```json
 {
   "mcpServers": {
     "solana-dev": {
       "command": "pnpm",
-      "args": ["ts-node", "<full-path-to-repo>/index.ts"]
+      "args": ["ts-node", "<full-path-to-this-repo>/index.ts"]
     }
   }
 }
@@ -96,6 +85,8 @@ This MCP server implementation provides a foundation that you can extend or fork
 
 10. **Account & Transaction Explorer**: Add a tool that takes an account or transaction ID and displays the contents in a human-readable format, similar to an explorer view. This could be useful for inspecting transaction data or account state without needing to manually decode the data.
 
+11. **Solana, Anchor, and Protocol Documentation**: Add resources that load the Solana, Anchor, and Protocol documentation directly into the MCP editor, providing easy access to relevant information without needing to leave the editor. This could be implemented by fetching the documentation from the respective repositories and serving it as resources from the MCP server.
+
 ### How to Contribute
 
 If you've built an extension that might be useful to others, consider submitting a pull request to this repository. Make sure to follow these guidelines:
@@ -105,6 +96,12 @@ If you've built an extension that might be useful to others, consider submitting
 3. Follow the existing code style
 4. Update the README with information about your addition
 
-## License
+# Security
 
-ISC
+This is a simple example and should not be used in production.
+MCP is a new standard, and lacks proper security measures.
+
+Please be extremely careful when installing & trying out MCP servers
+from unknown developers.
+
+Please use a sandboxed environment when trying out MCP servers, with no crucial information in it to prevent potential damage.
