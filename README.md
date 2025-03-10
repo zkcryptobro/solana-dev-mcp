@@ -40,14 +40,39 @@ npx @modelcontextprotocol/inspector ts-node index.ts
 
 ## Example Usage
 
-Add this to your [Claude desktop config](https://modelcontextprotocol.io/quickstart/user)
+This section explains how to use the Solana MCP server in [Claude](https://modelcontextprotocol.io/quickstart/user).
+Follow the same steps to use the Solana MCP server in [Windsurf](https://docs.codeium.com/windsurf/mcp) and [Cursor](https://docs.cursor.com/context/model-context-protocol).
+
+### Generate the configuration file
+
+To use this Solana MCP server, you need to generate a configuration file that Claude can use to connect to the server. Run one of the following commands to generate the configuration file:
+
+- `pnpm generate-config` if you have `ts-node` installed globally
+- `pnpm build && pnpm generate-config:js` if you don't have `ts-node` installed globally
+
+This will print a JSON config with the following content:
+
+If you have `ts-node`:
 
 ```json
 {
   "mcpServers": {
     "solana-dev": {
-      "command": "pnpm",
-      "args": ["ts-node", "<full-path-to-this-repo>/index.ts"]
+      "command": "ts-node",
+      "args": ["<full-path-to-repo>/index.ts"]
+    }
+  }
+}
+```
+
+If you don't have `ts-node` installed globally:
+
+```json
+{
+  "mcpServers": {
+    "solana-dev": {
+      "command": "node",
+      "args": ["<full-path-to-repo>/dist/index.js"]
     }
   }
 }
