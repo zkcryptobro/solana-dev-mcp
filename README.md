@@ -36,7 +36,7 @@ PRIVY_WALLET_ID=<your-privy-wallet-id>
 PRIVY_WALLET_ADDRESS=<your-privy-wallet-address>
 
 SOLANA_CLUSTER_URL=<your-solana-rpc-url>
-SOLANA_CLUSTER_NAME=<your-solana-cluster> # defaults to mainnet-beta
+SOLANA_CLUSTER_NAME=<either-'devnet'-or-'mainnet-beta'> # defaults to 'mainnet-beta'
 ```
 
 This ensures that your MCP server can only control your wallet and is able to make transaction requests to the Solana blockchain.
