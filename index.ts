@@ -1,7 +1,9 @@
 import { McpServer, ResourceTemplate } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import { z } from "zod";
-import { Connection, PublicKey, LAMPORTS_PER_SOL, clusterApiUrl } from "@solana/web3.js";
+import { Connection, PublicKey, LAMPORTS_PER_SOL, clusterApiUrl, SystemProgram, Transaction, sendAndConfirmTransaction, TransactionMessage, VersionedTransaction } from "@solana/web3.js";
+import { PrivyClient } from "@privy-io/server-auth";
+import 'dotenv/config';
 
 // Create an MCP server
 const server = new McpServer({
@@ -9,11 +11,24 @@ const server = new McpServer({
     version: "1.0.0",
 });
 
-// Initialize Solana connection
-const connection = new Connection(clusterApiUrl("mainnet-beta"), "confirmed");
+// Load variables from .env
+const PRIVY_APP_ID = process.env.PRIVY_APP_ID as string;
+const PRIVY_APP_SECRET = process.env.PRIVY_APP_SECRET as string;
+const PRIVY_WALLET_ID = process.env.PRIVY_WALLET_ID as string;
+const PRIVY_WALLET_ADDRESS = process.env.PRIVY_WALLET_SECRET as string;
+const CLUSTER_URL = process.env.SOLANA_RPC_URL as string;
+const CLUSTER_NAME = process.env.SOLANA_CLUSTER_NAME as string;
+
+// Initialize Solana connection based on the provided Cluster URL
+const connection = new Connection(CLUSTER_URL);
+// Determine the CAIP-2 ID for the Solana network. Defaults to 'mainnet-beta' if 'devnet' is not specified. 
+const caip2 = CLUSTER_NAME === 'devnet' ? 'solana:EtWTRABZaYq6iMfeYKouRu166VU2xqa1' : 'solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp';
+
+
+// Initialize Privy SDK
+const privy = new PrivyClient(PRIVY_APP_ID, PRIVY_APP_SECRET);
 
 // Solana RPC Methods as Tools
-
 // Get Account Info
 server.tool(
     "getAccountInfo",
@@ -25,6 +40,49 @@ server.tool(
             const accountInfo = await connection.getAccountInfo(pubkey);
             return {
                 content: [{ type: "text", text: JSON.stringify(accountInfo, null, 2) }]
+            };
+        } catch (error) {
+            return {
+                content: [{ type: "text", text: `Error: ${(error as Error).message}` }]
+            };
+        }
+    }
+);
+
+// Send SOL to another address
+server.tool(
+    "transferSOL",
+    "Used send a transaction from a Solana wallet address to another Solana address",
+    { recipient: z.string(), amount: z.number() },
+    async ({ recipient, amount }) => {
+        try {
+            const amountInLamports = amount * LAMPORTS_PER_SOL;
+
+            const senderKeypair = new PublicKey(PRIVY_WALLET_ADDRESS);
+            const recipientKeypair = new PublicKey(recipient);
+            
+            const transferInstruction = SystemProgram.transfer({
+                fromPubkey: senderKeypair,
+                toPubkey: recipientKeypair,
+                lamports: amountInLamports,
+            });
+            
+            const {blockhash} = await connection.getLatestBlockhash();
+            
+            const messageV0 = new TransactionMessage({
+                payerKey: senderKeypair,
+                recentBlockhash: blockhash,
+                instructions: [transferInstruction],
+            }).compileToV0Message();
+            const versionedTransaction = new VersionedTransaction(messageV0);
+            const {hash} = await privy.walletApi.solana.signAndSendTransaction({
+                walletId: PRIVY_WALLET_ID,
+                caip2, 
+                transaction: versionedTransaction,
+            });
+              
+            return {
+                content: [{ type: "text", text: `Sent transaction. Check it out at https://explorer.solana.com/tx/${hash}?cluster=devnet` }]
             };
         } catch (error) {
             return {
