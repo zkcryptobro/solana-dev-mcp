@@ -13,7 +13,7 @@ This repository demonstrates using a Model Context Protocol (MCP) server to allo
 Clone this repository and install dependencies:
 
 ```bash
-git clone https://github.com/solana-foundation/solana-dev-mcp.git
+git clone https://github.com/privy-io/solana-dev-mcp.git
 cd solana-dev-mcp
 pnpm install
 ```
