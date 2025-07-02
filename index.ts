@@ -15,8 +15,8 @@ const server = new McpServer({
 const PRIVY_APP_ID = process.env.PRIVY_APP_ID as string;
 const PRIVY_APP_SECRET = process.env.PRIVY_APP_SECRET as string;
 const PRIVY_WALLET_ID = process.env.PRIVY_WALLET_ID as string;
-const PRIVY_WALLET_ADDRESS = process.env.PRIVY_WALLET_SECRET as string;
-const CLUSTER_URL = process.env.SOLANA_RPC_URL as string;
+const PRIVY_WALLET_ADDRESS = process.env.PRIVY_WALLET_ADDRESS as string;
+const CLUSTER_URL = process.env.SOLANA_CLUSTER_URL as string;
 const CLUSTER_NAME = process.env.SOLANA_CLUSTER_NAME as string;
 
 // Initialize Solana connection based on the provided Cluster URL
@@ -82,7 +82,7 @@ server.tool(
             });
               
             return {
-                content: [{ type: "text", text: `Sent transaction. Check it out at https://explorer.solana.com/tx/${hash}${CLUSTER_NAME === 'devnet' ? '?cluster=devnet' : ''}` }]
+                content: [{ type: "text", text: `Sent transaction. Check it out at https://explorer.solana.com/tx/${hash}?cluster=devnet` }]
             };
         } catch (error) {
             return {
