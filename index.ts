@@ -22,7 +22,7 @@ const CLUSTER_NAME = process.env.SOLANA_CLUSTER_NAME as string;
 // Initialize Solana connection based on the provided Cluster URL
 const connection = new Connection(CLUSTER_URL);
 // Determine the CAIP-2 ID for the Solana network. Defaults to 'mainnet-beta' if 'devnet' is not specified. 
-const caip2 = CLUSTER_NAME === 'devnet' ? 'solana:EtWTRABZaYq6iMfeYKouRu166VU2xqa1' : 'solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp';
+const CAIP2 = CLUSTER_NAME === 'devnet' ? 'solana:EtWTRABZaYq6iMfeYKouRu166VU2xqa1' : 'solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp';
 
 
 // Initialize Privy SDK
@@ -66,23 +66,23 @@ server.tool(
                 toPubkey: recipientKeypair,
                 lamports: amountInLamports,
             });
-            
             const {blockhash} = await connection.getLatestBlockhash();
-            
+    
             const messageV0 = new TransactionMessage({
                 payerKey: senderKeypair,
                 recentBlockhash: blockhash,
                 instructions: [transferInstruction],
             }).compileToV0Message();
-            const versionedTransaction = new VersionedTransaction(messageV0);
+            const transaction = new VersionedTransaction(messageV0);
+
             const {hash} = await privy.walletApi.solana.signAndSendTransaction({
                 walletId: PRIVY_WALLET_ID,
-                caip2, 
-                transaction: versionedTransaction,
+                caip2: CAIP2, 
+                transaction,
             });
               
             return {
-                content: [{ type: "text", text: `Sent transaction. Check it out at https://explorer.solana.com/tx/${hash}?cluster=devnet` }]
+                content: [{ type: "text", text: `Sent transaction. Check it out at https://explorer.solana.com/tx/${hash}${CLUSTER_NAME === 'devnet' ? '?cluster=devnet' : ''}` }]
             };
         } catch (error) {
             return {
