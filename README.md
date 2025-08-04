@@ -1,5 +1,6 @@
 # Privy Solana MCP Demo
 
+# NOTE
 This repository demonstrates using a Model Context Protocol (MCP) server to allow users to interface with Privy wallets on Solana via natural language. It is a fork of the [original MCP Demo](https://github.com/solana-foundation/solana-dev-mcp) implemented by the Solana Foundation and adds a `transferSOL` function to allows users to transfer SOL via natural language.
 
 ## 0. Prerequisites
